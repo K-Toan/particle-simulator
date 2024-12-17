@@ -19,9 +19,10 @@ private:
     sf::Font font;
     sf::Text fpsText;
     sf::Text frameTimeText;
-    sf::Text particlesCountText;
+    sf::Text particleText;
     float fps = 0.f;
     int particles = 0;
+    std::string particle;
 
     // world configurations
     World world;
@@ -38,15 +39,24 @@ private:
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
             world.placeParticle(mousePosition.x / world.getParticleSize(),
-                                mousePosition.y / world.getParticleSize(),
-                                1);
+                                mousePosition.y / world.getParticleSize());
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-            sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
-            world.placeParticle(mousePosition.x / world.getParticleSize(),
-                                mousePosition.y / world.getParticleSize(),
-                                2);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+            world.setParticleType(1);
+            particle = world.getParticleType();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+            world.setParticleType(2);
+            particle = world.getParticleType();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+            world.setParticleType(3);
+            particle = world.getParticleType();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+            world.setParticleType(4);
+            particle = world.getParticleType();
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
@@ -61,7 +71,7 @@ private:
         fps = 1 / frameTime;
         fpsText.setString("fps: " + std::to_string(fps));
         frameTimeText.setString("frame time: " + std::to_string(frameTime));
-        particlesCountText.setString("particles count: ");
+        particleText.setString("particles : " + particle);
     }
 
     void render() {
@@ -71,7 +81,7 @@ private:
         // render text
         window.draw(fpsText);
         window.draw(frameTimeText);
-        window.draw(particlesCountText);
+        window.draw(particleText);
 
         // render
         world.render(window);
@@ -79,7 +89,7 @@ private:
     }
 
 public:
-    Game() : m_windowName("Particle Simulator"), m_windowWidth(1024u), m_windowHeight(1024u), isRunning(true) {}
+    Game() : m_windowName("Particle Simulator"), m_windowWidth(512u), m_windowHeight(512u), isRunning(true) {}
 
     void initialize() {
         // config window
@@ -87,7 +97,7 @@ public:
         setFrameRate(120);
 
         // config text
-        font.loadFromFile("D:\\Code\\cpp\\particle-simulator\\assets\\ProggyClean.ttf");
+        font.loadFromFile(R"(D:\Code\particle-simulator\assets\ProggyClean.ttf)");
         fpsText.setFont(font);
         fpsText.setCharacterSize(24.f);
         fpsText.setFillColor(sf::Color::Green);
@@ -98,10 +108,11 @@ public:
         frameTimeText.setFillColor(sf::Color::Green);
         frameTimeText.setPosition(0.f, 20.f);
 
-        particlesCountText.setFont(font);
-        particlesCountText.setCharacterSize(24.f);
-        particlesCountText.setFillColor(sf::Color::Green);
-        particlesCountText.setPosition(0.f, 40.f);
+        particleText.setFont(font);
+        particleText.setCharacterSize(24.f);
+        particleText.setFillColor(sf::Color::Green);
+        particleText.setPosition(0.f, 40.f);
+        particle = std::to_string(world.getParticleType());
     }
 
     void run() {
